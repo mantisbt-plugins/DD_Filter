@@ -22,8 +22,7 @@ Locate the following lines:
 define( 'MY_VIEW_INC_ALLOW', true );
 
 and right after that, insert the following lines:
-# CN-Duedate-start
 event_signal( 'EVENT_MYVIEW' );
-# CN-Duedate-end
+
 
 

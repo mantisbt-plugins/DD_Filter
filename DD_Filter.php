@@ -4,18 +4,17 @@ class DD_FilterPlugin extends MantisPlugin {
 	function register() {
 		$this->name			= 'DD_Filter';
 		$this->description	= 'Enable DueDate filtering';
-		$this->version		= '1.03';
+		$this->version		= '1.04';
 		$this->requires		= array('MantisCore'       => '2.0.0',);
 		$this->author		= 'Cas Nuy';
 		$this->contact		= 'Cas-at-nuy.info';
-		$this->url		= 'https://github.com/mantisbt-plugins/DD_Filtero';
+		$this->url			= 'http://www.nuy.info';
 		$this->page 		= 'config';
-
 	}
 
 	function config() {
 		return array(
-			'dd_filer' => ON,
+			'dd_filter' => ON,
 			'dd_daysfrom' => 7,
 			'dd_daysto' => 7,
 			);
@@ -38,7 +37,6 @@ class DD_FilterPlugin extends MantisPlugin {
 			# take the due date of issue
 			$t_duedate = $thisissue->due_date;
 			$t_bugid= $thisissue->id;
-
 			# update custom field
 			$ok = custom_field_set_value( $t_id, $t_bugid, $t_duedate, FALSE );
 		}

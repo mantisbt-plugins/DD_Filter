@@ -1,0 +1,2 @@
+<?php
+$s_plugin_DD_Filter_config = "Duedate filter configuration";

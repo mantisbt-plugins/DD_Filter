@@ -1,11 +1,15 @@
 <?php	
 ########################################################
-# Mantis Bugtracker Plugin Duedate
+# Mantis Bugtracker Plugin DD-filter 1.04
 #
-# By Cas Nuy  www.nuy.info 2022
+# By Cas Nuy  www.nuy.info 2023
 # To be used with Mantis 2.00 and above
 #
 ########################################################
+global $t_url_link_parameters;
+global $t_bug_class;
+global $t_update_bug_threshold;
+global $t_filter;
 $t_user 	= auth_get_current_user_id();
 $t_manage_project_threshold = config_get( 'manage_project_threshold' );
 $t_project_id = helper_get_current_project();
@@ -31,15 +35,14 @@ if ( $t_project_id === 0) {
 	$query = "SELECT * FROM {bug} WHERE (due_date between $start AND $end) AND project_id = $t_project_id AND STATUS<80  and ( reporter_id = $t_user or handler_id = $t_user ) ORDER BY due_date ASC";
 	}
 }
-$result = db_query_bound($query);
+$result = db_query($query);
 $t_bug_count=db_num_rows($result);
 
 if ($t_bug_count===0) {
 	return;
 }
-
 $t_box_title_label = 'Issues due for the next '. $daysto .' days (starting back for '. $daysfrom .' days)';
-
+$t_box_title = 'duedates';
 $t_collapse_block = is_collapsed( $t_box_title );
 $t_block_css = $t_collapse_block ? 'collapsed' : '';
 $t_block_icon = $t_collapse_block ? 'fa-chevron-down' : 'fa-chevron-up';
@@ -55,8 +58,7 @@ $t_bug_string = $t_bug_count == 1 ? 'bug' : 'bugs';
 			<?php print_icon( 'fa-list-alt', 'ace-icon' ); ?>
 			<?php
 			#-- Box title
-$t_box_url = html_entity_decode( config_get( 'bug_count_hyperlink_prefix' ) ).'&' . $t_url_link_parameters[$t_box_title];
-print_link( $t_box_url, $t_box_title_label, false, 'white' );
+echo $t_box_title_label;
 # -- Viewing range info
 $v_start =  1;
 $v_end = $v_start + $t_bug_count - 1;
@@ -68,11 +70,6 @@ echo '<span class="badge"> ' . " $v_start - $v_end / $t_bug_count " . ' </span>'
 			<a data-action="collapse" href="#">
 				<?php print_icon( $t_block_icon, '1 ace-icon bigger-125' ); ?>
 			</a>
-		</div>
-		<div class="widget-toolbar no-border hidden-xs">
-			<div class="widget-menu">
-				<?php print_small_button( $t_box_url, lang_get( 'view_bugs_link' ) ); ?>
-			</div>
 		</div>
 	</div>
 
@@ -103,7 +100,7 @@ while ($t_bug  = db_fetch_array($result)) {
 
 	?>
 
-<tr class="my-buglist-bug <?php echo $t_bug_class?>">
+<tr class="my-buglist-bug <?php // echo $t_bug_class?>">
 	<?php
 	# -- Bug ID and details link + Pencil shortcut --?>
 	<td class="nowrap width-13 my-buglist-id">
@@ -139,7 +136,7 @@ while ($t_bug  = db_fetch_array($result)) {
 				echo '</a>';
 			}
 
-			if( VS_PRIVATE == $t_bug->view_state ) {
+			if( VS_PRIVATE == $t_bug['view_state'] ) {
 				echo ' ';
 				print_icon( 'fa-lock', 'fa-lg light-grey', lang_get( 'private' ) );
 			}
@@ -161,11 +158,7 @@ while ($t_bug  = db_fetch_array($result)) {
 	echo '<span class="small">', string_display_line( category_full_name( $t_bug['category_id'], true, $t_bug['project_id'] ) ), '</span>';
 
 	echo '<span class="small"> - ';
-	if( $t_bug['last_updated'] > strtotime( '-' . $t_filter[FILTER_PROPERTY_HIGHLIGHT_CHANGED] . ' hours' ) ) {
-		echo '<strong>' . $t_last_updated . '</strong>';
-	} else {
-		echo $t_last_updated;
-	}
+	echo $t_last_updated;
 	echo '</span>';
 	?>
 	</td>
