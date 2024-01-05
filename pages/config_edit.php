@@ -17,4 +17,4 @@ plugin_config_set( 'dd_daysto', $f_dd_daysto );
 form_security_purge( 'plugin_dd_filter_config_update' );
 
 # redirect
-print_successful_redirect( plugin_page( 'config', true ) );
+print_header_redirect( plugin_page( 'config', true ) );

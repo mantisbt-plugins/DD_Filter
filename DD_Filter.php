@@ -4,7 +4,7 @@ class DD_FilterPlugin extends MantisPlugin {
 	function register() {
 		$this->name			= 'DD_Filter';
 		$this->description	= 'Enable DueDate filtering';
-		$this->version		= '1.04';
+		$this->version		= '1.05';
 		$this->requires		= array('MantisCore'       => '2.0.0',);
 		$this->author		= 'Cas Nuy';
 		$this->contact		= 'Cas-at-nuy.info';
